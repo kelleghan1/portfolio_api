@@ -1,21 +1,42 @@
-import { PortfolioItemType } from '../graphql/generated/resolvers-types'
+export interface SeedPortfolioItemLinkType {
+  id: number
+  url: string
+  label: string
+  isInternal: boolean
+}
 
-const portfolioItemArray: PortfolioItemType[] = [
+export interface SeedPortfolioItemType {
+  description: string
+  homeImage: string
+  id: number
+  projectId: string
+  images: string[]
+  name: string
+  primaryImage: string
+  products: string[]
+  categories: string[]
+  githubLinks: SeedPortfolioItemLinkType[]
+  productLinks: SeedPortfolioItemLinkType[]
+}
+
+const portfolioItemArray: SeedPortfolioItemType[] = [
   {
-    rowColor: '#fff',
     categories: [ 'development' ],
     name: 'Dropzio',
     id: 1,
+    productLinks: [],
     projectId: 'dropzio',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1-1/dropziomocksquare_b2vyb8lrkH.jpg',
     products: [ 'Logo','Mobile App' ],
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1-1/dropzio_E0JxTuxn7.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock1_Bx_s99zIM.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock2_1ggb_UkV6.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock3_-eefbAb6j5.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock4_kMtxQ6n8Wd.jpg' ],
     githubLinks: [{
+      isInternal: false,
       id: 1,
       url: 'https://github.com/kelleghan1/dropzioApp2/',
       label: 'View front end Github'
     },{
+      isInternal: false,
       id: 2,
       url: 'https://github.com/kelleghan1/dropzio_server/',
       label: 'View back end on Github'
@@ -25,14 +46,15 @@ const portfolioItemArray: PortfolioItemType[] = [
   {
     categories: [ 'development' ],
     name: 'Fantasy Team Advice',
-    rowColor: '#fff',
     id: 2,
+    githubLinks: [],
     projectId: 'fantasyteamadvice',
     products: [ 'Fantasy Sports Platform' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/fantasy-team-advice/tr:w-720,ar-1-1/ftasitemocks-quare_Nk9p8yTg9.jpeg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/fantasy-team-advice/tr:w-720,ar-1-1/ftasitemocks-quare_Nk9p8yTg9.jpeg',
     images: [],
     productLinks: [{
+      isInternal: false,
       id: 22,
       label: 'Visit Fantasy Team Advice',
       url: 'https://fantasyteamadvice.com/'
@@ -40,12 +62,12 @@ const portfolioItemArray: PortfolioItemType[] = [
     description: 'The Fantasy Team Advice platform provides a comprehensive suite of fantasy tools, content, and advice for thousands of active fantasy sports players. It offers a subscription service with multiple tiers, lineup generators, and advanced sports data analysis tools for more than eight sports leagues. The front end is built on React served by a Node/Express back end and hosted on an AWS EC2 linux instance with Postgres and SQL. Several independent Node APIs are used to aggregate live sports data stored in the application database. Lineups are generated in an independent AWS Lambda Python function and relayed back to the client in real time using websockets. Recurring subscriptions are managed by Stripe and PayPal and synchronized with the application database via webhooks.'
   },
   {
-    rowColor: '#787a7b',
     categories: [ 'design' ],
     name: 'Silverline Media',
     id: 3,
     projectId: 'silverlineMedia',
-    textColor: '#fff',
+    githubLinks: [],
+    productLinks: [],
     products: [ 'Logo' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediagrey_ssSTGmmM-.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediagrey_ssSTGmmM-.jpg',
@@ -55,14 +77,15 @@ const portfolioItemArray: PortfolioItemType[] = [
   {
     categories: [ 'design','development' ],
     name: 'Carvell Design + Build',
-    rowColor: '#fff',
     id: 4,
+    githubLinks: [],
     projectId: 'carvell',
     products: [ 'Brand','Website' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellsitemock-square_jeQbNSMds.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvell_SElIRCSph.png',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellsitemock-square_jeQbNSMds.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellwhite__63zGVZDz.png' ],
     productLinks: [{
+      isInternal: false,
       id: 99,
       label: 'Visit Carvell Design + Build',
       url: 'https://carvelldesignbuild.com/'
@@ -70,17 +93,17 @@ const portfolioItemArray: PortfolioItemType[] = [
     description: 'Carvell Design + Build is a full service design and build firm that specializes in customized remodels and restoration, additions, and new construction work. The logo was created with Adobe Illustrator and the Carvell website was created using Wordpress.'
   },
   {
-    rowColor: '#050608',
     categories: [ 'design','development' ],
     name: 'Flight Switch',
     id: 5,
+    productLinks: [],
     projectId: 'flightswitch',
-    textColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchblack_b_g4OmDsi.jpg',
     products: [ 'Logo','Shirt Designs','Online Store' ],
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchblack_b_g4OmDsi.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchsitemock_NCHEmQYC-.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchwhite_FFWX7SQ3d.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtastro_OEW5cGtn-Q.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtcity_Uki_5gzIZl.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtflag_KX8rhDAT4y.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtsoldier_yXcMkDynND.png' ],
     githubLinks: [{
+      isInternal: false,
       id: 3,
       url: 'https://github.com/kelleghan1/flight-switch-store/',
       label: 'View on Github'
@@ -90,11 +113,11 @@ const portfolioItemArray: PortfolioItemType[] = [
   {
     categories: [ 'design' ],
     name: 'Grillerz Pub',
-    rowColor: '#050608',
     id: 7,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'grillerzpub',
     products: [ 'Logo' ],
-    textColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzflames_la6pwSJG1N.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzflames_la6pwSJG1N.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzsign_Kd5bvPsH2K.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzwhite_X4Inkg-hp.jpg' ],
@@ -105,7 +128,6 @@ const portfolioItemArray: PortfolioItemType[] = [
     name: 'Knight Moves',
     id: 8,
     projectId: 'knightmoves',
-    rowColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/knight-moves/tr:w-720,ar-1-1/knightmovesmock_S03mdjcKr-.png',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/knight-moves/tr:w-720,ar-1-1/knightmoves_L8c2IAVwf.png',
     products: [ 'Side Project' ],
@@ -117,10 +139,12 @@ const portfolioItemArray: PortfolioItemType[] = [
       isInternal: true
     }],
     githubLinks: [{
+      isInternal: false,
       id: 5,
       label: 'View on Github (Angular)',
       url: 'https://github.com/kelleghan1/knight/'
     },{
+      isInternal: false,
       id: 6,
       label: 'View on Github (React, NPM package)',
       url: 'https://github.com/kelleghan1/knight_moves_2'
@@ -130,8 +154,9 @@ const portfolioItemArray: PortfolioItemType[] = [
   {
     categories: [ 'design' ],
     name: 'Sunshine Tree Farm',
-    rowColor: '#fff',
     id: 9,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'sunshinetreefarm',
     products: [ 'Logo' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/sunshine-tree-farm/tr:w-720,ar-1-1/sunshinetreefarmwhite_S0yxmmJcN.jpg',
@@ -144,30 +169,32 @@ const portfolioItemArray: PortfolioItemType[] = [
     name: 'Alchemist Labs',
     products: [ 'Logo' ],
     id: 10,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'alchemistlabs',
-    rowColor: '#627478',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/alchemist-labs/tr:w-720,ar-1-1/alchemistlabswater_xIp3bElxN.jpeg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/alchemist-labs/tr:w-720,ar-1-1/alchemistlabswater_xIp3bElxN.jpeg',
-    textColor: '#fff',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/alchemist-labs/tr:w-720,ar-1-1/alchemistlabsblue_PVxSKKBcN.jpeg' ],
     description: 'Alchemist Labs produces vapor concentrate for vaporizer products. The logo was created using Adobe Illustrator.'
   },
   {
     categories: [ 'development' ],
     name: 'Yodel',
-    rowColor: '#FFD67F',
     id: 11,
     projectId: 'yodel',
+    productLinks: [],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1-1/yodelmocksquare_2yAPmk591j.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1-1/yodel_KPmKL107I.jpg',
     products: [ 'Logo, Mobile App' ],
     githubLinks: [
       {
+        isInternal: false,
         id: 7,
         label: 'View front end on Github',
         url: 'https://github.com/MSturges/YodelApp/'
       },
       {
+        isInternal: false,
         id: 8,
         label: 'View back end on Github',
         url: 'https://github.com/MatieuB/yodel/'
@@ -181,8 +208,9 @@ const portfolioItemArray: PortfolioItemType[] = [
     name: 'Jam Factory',
     products: [ 'Logo' ],
     id: 12,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'jamfactory',
-    rowColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactorywhite_FSzRXarCc.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactorywhite_FSzRXarCc.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactoryblack_MnvFdJtCY7.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactoryblackandwhite_Q09rWb8wn.jpg' ],
@@ -193,11 +221,11 @@ const portfolioItemArray: PortfolioItemType[] = [
     name: 'Revmatek',
     products: [ 'Logo' ],
     id: 168,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'revmatek',
-    rowColor: '#050608',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekorange_UYq3DUNd4.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekorange_UYq3DUNd4.jpg',
-    textColor: '#fff',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekblack_omDHIsiWP.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekwhite_WPcaZtP4b.jpg' ],
     description: 'Revmatek offers peer to peer streaming service and solutions. The logo was created using Adobe Illustrator.'
   },
@@ -205,8 +233,9 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design','development' ],
     name: 'Family Home Health',
     id: 13,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'familyhomehealth',
-    rowColor: '#fff',
     products: [ 'Brochure','Website' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhsite-square_fSanw_PqU.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhsite-square_fSanw_PqU.jpg',
@@ -217,10 +246,10 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design' ],
     name: 'Purple State Productions',
     id: 14,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'purplerstateproductions',
-    rowColor: '#050608',
     products: [ 'Logo','Event Poster' ],
-    textColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1-1/purplestateblack_cQUWZop-B.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1-1/purplestateblack_cQUWZop-B.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1000-1318/purplestatepostermock_irUDvOs0M.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1-1/purplestatewhite_U7iHBf6fB.jpg' ],
@@ -230,8 +259,9 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design' ],
     name: 'Rising Sun',
     id: 15,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'risingsun',
-    rowColor: '#fff',
     products: [ 'Logo','Album Cover','Booklet' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsuncover_uJxKqrSp8.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsuncover_uJxKqrSp8.jpg',
@@ -242,9 +272,10 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design' ],
     name: 'Teneo Talent',
     id: 16,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'teneotalent',
     products: [ 'Logo' ],
-    rowColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/teneo-talent/tr:w-720,ar-1-1/teneotalentwhite_wL6-VsPkR.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/teneo-talent/tr:w-720,ar-1-1/teneotalentwhite_wL6-VsPkR.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/teneo-talent/tr:w-720,ar-1-1/teneotalentblack_jZuCsP1tdH.jpg' ],
@@ -254,12 +285,12 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design' ],
     name: 'Proper Motion',
     id: 17,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'propermotion',
     products: [ 'Album Cover' ],
-    rowColor: '#050608',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/proper-motion/tr:w-720,ar-1-1/propermotioncover_ijoAHV3l3.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/proper-motion/tr:w-720,ar-1-1/propermotioncover_ijoAHV3l3.jpg',
-    textColor: '#fff',
     images: [],
     description: 'Proper Motion is a music producer based in Colorado. The album cover was created using Adobe Photoshop and Adobe Illustrator.'
   },
@@ -267,14 +298,14 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design' ],
     name: 'Craft Health',
     id: 18,
+    githubLinks: [],
     projectId: 'crafthealth',
     products: [ 'Logo' ],
-    rowColor: '#050608',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/craft-health/tr:w-720,ar-1-1/crafthealthblue_GZqACGml-.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/craft-health/tr:w-720,ar-1-1/crafthealthblue_GZqACGml-.jpg',
-    textColor: '#fff',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/craft-health/tr:w-720,ar-1-1/crafthealthwhite_RxZ0iq96P.png' ],
     productLinks: [{
+      isInternal: false,
       id: 9,
       label: 'Visit Craft Health',
       url: 'https://crafthealth.net/'
@@ -286,8 +317,9 @@ const portfolioItemArray: PortfolioItemType[] = [
     name: 'Family Hospice',
     id: 89,
     projectId: 'familyhospice',
+    githubLinks: [],
+    productLinks: [],
     products: [ 'Brochure','Website' ],
-    rowColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicesite-square_rwxgRVU8Q.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicesite-square_rwxgRVU8Q.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicebrochuresquare-inside_3lyerYFWo.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicebrochuresquare-outside_HN-6nP7_s.jpg' ],
@@ -297,9 +329,10 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design' ],
     name: 'Moonwalkers',
     id: 77,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'moonwalkers',
     products: [ 'Logo' ],
-    rowColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkerswhite_DN4hyMRXz.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkerswhite_DN4hyMRXz.jpg',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkerspink_EH8gRDqaS.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkersblack_dC_jfmX3Q.jpg' ],
@@ -309,22 +342,14 @@ const portfolioItemArray: PortfolioItemType[] = [
     categories: [ 'design' ],
     name: 'Absinthe House',
     id: 22,
+    githubLinks: [],
+    productLinks: [],
     projectId: 'absinthehouse',
     products: [ 'Logo, Menu, Website' ],
-    rowColor: '#050608',
-    textColor: '#fff',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehouseblack_5WIbDqnQ6.png',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehouseblack_5WIbDqnQ6.png',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousesite-square_G5__dLkld.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousewhite_P7g4Vkk6g.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1200-800/absinthemenumockup_1DnD6-KNl.png' ],
     description: 'Absinthe House is a bar and nightclub in Boulder, Colorado. Adobe Illustrator and Adobe InDesign were used to create the vector banner and menu. The Absinthe House website was designed using Adobe Illustrator and built in Wix.'
   }]
 
-export const getPortfolioData = async (): Promise<any> =>
-  await new Promise(resolve => {
-    setTimeout(
-      () => {
-        resolve(portfolioItemArray)
-      },
-      10
-    )
-  })
+export default portfolioItemArray

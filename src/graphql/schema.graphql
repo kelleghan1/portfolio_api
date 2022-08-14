@@ -1,0 +1,49 @@
+type Link {
+  id: Int!
+  isInternal: Boolean!
+  label: String!
+  type: LinkType!
+  url: String!
+}
+
+type LinkType {
+  id: Int!
+  name: String!
+}
+
+type Image {
+  id: Int!
+  url: String!
+}
+
+type Product {
+  id: Int!
+  name: String!
+}
+
+type Category {
+  id: Int!
+  name: String!
+}
+
+type PortfolioItem {
+  categories: [Category!]!
+  description: String!
+  links: [Link!]!
+  homeImage: Image!
+  id: Int!
+  images: [Image!]!
+  name: String!
+  primaryImage: Image!
+  products: [Product!]!
+  projectId: String!
+}
+
+type Query {
+  links: [Link!]!
+  images: [Image!]!
+  categories: [Category!]!
+  products: [Product!]!
+  linkTypes: [LinkType!]!
+  portfolioItems: [PortfolioItem!]!
+}

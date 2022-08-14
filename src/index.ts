@@ -1,7 +1,11 @@
 import { ApolloServer } from 'apollo-server'
-import schema from './schema'
+import executableSchema from './graphql/executableSchema'
+import { context } from './graphql/context'
 
-export const server = new ApolloServer({ schema })
+export const server = new ApolloServer({
+  schema: executableSchema,
+  context
+})
 
 const port = 4000
 

@@ -1,8 +1,9 @@
-schema: ./src/graphql/types/**/*.graphql
+schema: ./src/graphql/**/*.graphql
 generates:
-  ./src/graphql/generated/resolvers-types.ts:
+  ./src/graphql/generatedTypes.ts:
     config:
       useIndexSignature: true
+      contextType: ./context#Context
     plugins:
       - typescript
       - typescript-resolvers
