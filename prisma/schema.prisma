@@ -8,13 +8,13 @@ generator client {
 }
 
 model PortfolioItem {
-  id             Int        @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   description    String
-  homeImage      Image      @relation(name: "HomeImageId", fields: [homeImageId], references: [id])
-  primaryImage   Image      @relation(name: "PrimaryImageId", fields: [primaryImageId], references: [id])
-  projectId      String     @unique
-  name           String     @unique
-  images         Image[]
+  homeImage      ProjectImage   @relation(name: "HomeImageId", fields: [homeImageId], references: [id])
+  primaryImage   ProjectImage   @relation(name: "PrimaryImageId", fields: [primaryImageId], references: [id])
+  projectId      String         @unique
+  name           String         @unique
+  projectImages  ProjectImage[]
   categories     Category[]
   links          Link[]
   products       Product[]
@@ -38,9 +38,9 @@ model LinkType {
   Link Link[]
 }
 
-model Image {
+model ProjectImage {
   id                          Int             @id @default(autoincrement())
-  url                         String          @unique
+  imageUrl                    String          @unique
   primaryImagesPortfolioItems PortfolioItem[] @relation("PrimaryImageId")
   homeImagesPortfolioItems    PortfolioItem[] @relation("HomeImageId")
   PortfolioItem               PortfolioItem[]

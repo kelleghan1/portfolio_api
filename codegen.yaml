@@ -1,9 +1,12 @@
 schema: ./src/graphql/**/*.graphql
 generates:
-  ./src/graphql/generatedTypes.ts:
+  ./src/types/generatedTypes.ts:
     config:
       useIndexSignature: true
       contextType: ./context#Context
     plugins:
       - typescript
       - typescript-resolvers
+hooks:
+  afterOneFileWrite:
+    - eslint --fix

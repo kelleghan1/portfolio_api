@@ -31,14 +31,14 @@ async function main() {
         name,
         homeImage: {
           connectOrCreate: {
-            where: { url: homeImage },
-            create: { url: homeImage }
+            where: { imageUrl: homeImage },
+            create: { imageUrl: homeImage }
           }
         },
         primaryImage: {
           connectOrCreate: {
-            where: { url: primaryImage },
-            create: { url: primaryImage }
+            where: { imageUrl: primaryImage },
+            create: { imageUrl: primaryImage }
           }
         },
         projectId,
@@ -49,10 +49,10 @@ async function main() {
             create: { name: product }
           }))
         },
-        images: {
-          connectOrCreate: images.map(url => ({
-            where: { url },
-            create: { url }
+        projectImages: {
+          connectOrCreate: images.map(imageUrl => ({
+            where: { imageUrl },
+            create: { imageUrl }
           }))
         },
         links: {

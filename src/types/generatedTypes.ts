@@ -20,12 +20,6 @@ export type Category = {
   name: Scalars['String'];
 };
 
-export type Image = {
-  __typename?: 'Image';
-  id: Scalars['Int'];
-  url: Scalars['String'];
-};
-
 export type Link = {
   __typename?: 'Link';
   id: Scalars['Int'];
@@ -45,14 +39,16 @@ export type PortfolioItem = {
   __typename?: 'PortfolioItem';
   categories: Array<Category>;
   description: Scalars['String'];
-  homeImage: Image;
+  githubLinks?: Maybe<Array<Link>>;
+  homeImage: ProjectImage;
   id: Scalars['Int'];
-  images: Array<Image>;
   links: Array<Link>;
   name: Scalars['String'];
-  primaryImage: Image;
+  primaryImage: ProjectImage;
+  productLinks?: Maybe<Array<Link>>;
   products: Array<Product>;
   projectId: Scalars['String'];
+  projectImages: Array<ProjectImage>;
 };
 
 export type Product = {
@@ -61,14 +57,20 @@ export type Product = {
   name: Scalars['String'];
 };
 
+export type ProjectImage = {
+  __typename?: 'ProjectImage';
+  id: Scalars['Int'];
+  imageUrl: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
   categories: Array<Category>;
-  images: Array<Image>;
   linkTypes: Array<LinkType>;
   links: Array<Link>;
   portfolioItems: Array<PortfolioItem>;
   products: Array<Product>;
+  projectImages: Array<ProjectImage>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -143,12 +145,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
-  Image: ResolverTypeWrapper<Image>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Link: ResolverTypeWrapper<Link>;
   LinkType: ResolverTypeWrapper<LinkType>;
   PortfolioItem: ResolverTypeWrapper<PortfolioItem>;
   Product: ResolverTypeWrapper<Product>;
+  ProjectImage: ResolverTypeWrapper<ProjectImage>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']>;
 }>;
@@ -157,12 +159,12 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   Category: Category;
-  Image: Image;
   Int: Scalars['Int'];
   Link: Link;
   LinkType: LinkType;
   PortfolioItem: PortfolioItem;
   Product: Product;
+  ProjectImage: ProjectImage;
   Query: {};
   String: Scalars['String'];
 }>;
@@ -170,12 +172,6 @@ export type ResolversParentTypes = ResolversObject<{
 export type CategoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type ImageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Image'] = ResolversParentTypes['Image']> = ResolversObject<{
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -197,14 +193,16 @@ export type LinkTypeResolvers<ContextType = Context, ParentType extends Resolver
 export type PortfolioItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PortfolioItem'] = ResolversParentTypes['PortfolioItem']> = ResolversObject<{
   categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
   description?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  homeImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
+  githubLinks?: Resolver<Maybe<Array<ResolversTypes['Link']>>, ParentType, ContextType>;
+  homeImage?: Resolver<ResolversTypes['ProjectImage'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType>;
   links?: Resolver<Array<ResolversTypes['Link']>, ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  primaryImage?: Resolver<ResolversTypes['Image'], ParentType, ContextType>;
+  primaryImage?: Resolver<ResolversTypes['ProjectImage'], ParentType, ContextType>;
+  productLinks?: Resolver<Maybe<Array<ResolversTypes['Link']>>, ParentType, ContextType>;
   products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType>;
   projectId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  projectImages?: Resolver<Array<ResolversTypes['ProjectImage']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -214,22 +212,28 @@ export type ProductResolvers<ContextType = Context, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ProjectImageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ProjectImage'] = ResolversParentTypes['ProjectImage']> = ResolversObject<{
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  imageUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
   categories?: Resolver<Array<ResolversTypes['Category']>, ParentType, ContextType>;
-  images?: Resolver<Array<ResolversTypes['Image']>, ParentType, ContextType>;
   linkTypes?: Resolver<Array<ResolversTypes['LinkType']>, ParentType, ContextType>;
   links?: Resolver<Array<ResolversTypes['Link']>, ParentType, ContextType>;
   portfolioItems?: Resolver<Array<ResolversTypes['PortfolioItem']>, ParentType, ContextType>;
   products?: Resolver<Array<ResolversTypes['Product']>, ParentType, ContextType>;
+  projectImages?: Resolver<Array<ResolversTypes['ProjectImage']>, ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = Context> = ResolversObject<{
   Category?: CategoryResolvers<ContextType>;
-  Image?: ImageResolvers<ContextType>;
   Link?: LinkResolvers<ContextType>;
   LinkType?: LinkTypeResolvers<ContextType>;
   PortfolioItem?: PortfolioItemResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
+  ProjectImage?: ProjectImageResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
 }>;
 

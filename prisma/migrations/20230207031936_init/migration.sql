@@ -6,8 +6,8 @@ CREATE TABLE "PortfolioItem" (
     "name" TEXT NOT NULL,
     "homeImageId" INTEGER NOT NULL,
     "primaryImageId" INTEGER NOT NULL,
-    CONSTRAINT "PortfolioItem_homeImageId_fkey" FOREIGN KEY ("homeImageId") REFERENCES "Image" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
-    CONSTRAINT "PortfolioItem_primaryImageId_fkey" FOREIGN KEY ("primaryImageId") REFERENCES "Image" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "PortfolioItem_homeImageId_fkey" FOREIGN KEY ("homeImageId") REFERENCES "ProjectImage" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "PortfolioItem_primaryImageId_fkey" FOREIGN KEY ("primaryImageId") REFERENCES "ProjectImage" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -27,9 +27,9 @@ CREATE TABLE "LinkType" (
 );
 
 -- CreateTable
-CREATE TABLE "Image" (
+CREATE TABLE "ProjectImage" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "url" TEXT NOT NULL
+    "imageUrl" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -42,6 +42,14 @@ CREATE TABLE "Category" (
 CREATE TABLE "Product" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "_PortfolioItemToProjectImage" (
+    "A" INTEGER NOT NULL,
+    "B" INTEGER NOT NULL,
+    CONSTRAINT "_PortfolioItemToProjectImage_A_fkey" FOREIGN KEY ("A") REFERENCES "PortfolioItem" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "_PortfolioItemToProjectImage_B_fkey" FOREIGN KEY ("B") REFERENCES "ProjectImage" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -58,14 +66,6 @@ CREATE TABLE "_LinkToPortfolioItem" (
     "B" INTEGER NOT NULL,
     CONSTRAINT "_LinkToPortfolioItem_A_fkey" FOREIGN KEY ("A") REFERENCES "Link" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "_LinkToPortfolioItem_B_fkey" FOREIGN KEY ("B") REFERENCES "PortfolioItem" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "_ImageToPortfolioItem" (
-    "A" INTEGER NOT NULL,
-    "B" INTEGER NOT NULL,
-    CONSTRAINT "_ImageToPortfolioItem_A_fkey" FOREIGN KEY ("A") REFERENCES "Image" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "_ImageToPortfolioItem_B_fkey" FOREIGN KEY ("B") REFERENCES "PortfolioItem" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -89,13 +89,19 @@ CREATE UNIQUE INDEX "Link_url_key" ON "Link"("url");
 CREATE UNIQUE INDEX "LinkType_name_key" ON "LinkType"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Image_url_key" ON "Image"("url");
+CREATE UNIQUE INDEX "ProjectImage_imageUrl_key" ON "ProjectImage"("imageUrl");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Product_name_key" ON "Product"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_PortfolioItemToProjectImage_AB_unique" ON "_PortfolioItemToProjectImage"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_PortfolioItemToProjectImage_B_index" ON "_PortfolioItemToProjectImage"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_PortfolioItemToProduct_AB_unique" ON "_PortfolioItemToProduct"("A", "B");
@@ -108,12 +114,6 @@ CREATE UNIQUE INDEX "_LinkToPortfolioItem_AB_unique" ON "_LinkToPortfolioItem"("
 
 -- CreateIndex
 CREATE INDEX "_LinkToPortfolioItem_B_index" ON "_LinkToPortfolioItem"("B");
-
--- CreateIndex
-CREATE UNIQUE INDEX "_ImageToPortfolioItem_AB_unique" ON "_ImageToPortfolioItem"("A", "B");
-
--- CreateIndex
-CREATE INDEX "_ImageToPortfolioItem_B_index" ON "_ImageToPortfolioItem"("B");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_CategoryToPortfolioItem_AB_unique" ON "_CategoryToPortfolioItem"("A", "B");

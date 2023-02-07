@@ -11,9 +11,9 @@ type LinkType {
   name: String!
 }
 
-type Image {
+type ProjectImage {
   id: Int!
-  url: String!
+  imageUrl: String!
 }
 
 type Product {
@@ -29,19 +29,21 @@ type Category {
 type PortfolioItem {
   categories: [Category!]!
   description: String!
+  githubLinks: [Link!]
   links: [Link!]!
-  homeImage: Image!
+  homeImage: ProjectImage!
   id: Int!
-  images: [Image!]!
+  projectImages: [ProjectImage!]!
   name: String!
-  primaryImage: Image!
+  primaryImage: ProjectImage!
+  productLinks: [Link!]
   products: [Product!]!
   projectId: String!
 }
 
 type Query {
   links: [Link!]!
-  images: [Image!]!
+  projectImages: [ProjectImage!]!
   categories: [Category!]!
   products: [Product!]!
   linkTypes: [LinkType!]!

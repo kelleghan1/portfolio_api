@@ -1,38 +1,36 @@
-import { Resolvers } from './generatedTypes'
+import { LinkTypes } from '../types/types'
+import { Resolvers } from '../types/generatedTypes'
 
 const resolvers: Resolvers = {
   Query: {
-    links: async (parent, args, context) => await context.prisma.link.findMany({ include: { type: true } }),
-    linkTypes: async (parent, args, context) => await context.prisma.linkType.findMany(),
-    categories: async (parent, args, context) => await context.prisma.category.findMany(),
-    images: async (parent, args, context) => await context.prisma.image.findMany(),
-    products: async (parent, args, context) => await context.prisma.product.findMany(),
-    portfolioItems: async (parent, args, context) =>
-      await context.prisma.portfolioItem.findMany({
-        include: {
-          products: true,
-          links: {
-            select: {
-              id: true,
-              url: true,
-              label: true,
-              type: true,
-              isInternal: true
-            }
-          },
-          images: true,
-          primaryImage: true,
-          homeImage: true,
-          categories: true
-        }
-      })
+    links: (_parent, _args, context) => context.prisma.link.findMany({ include: { type: true } }),
+    linkTypes: (_parent, _args, context) => context.prisma.linkType.findMany(),
+    categories: (_parent, _args, context) => context.prisma.category.findMany(),
+    projectImages: (_parent, _args, context) => context.prisma.image.findMany(),
+    products: (_parent, _args, context) => context.prisma.product.findMany(),
+    portfolioItems: (_parent, _args, context) => context.prisma.portfolioItem.findMany({
+      include: {
+        products: true,
+        links: {
+          select: {
+            id: true,
+            url: true,
+            label: true,
+            type: true,
+            isInternal: true
+          }
+        },
+        projectImages: true,
+        primaryImage: true,
+        homeImage: true,
+        categories: true
+      }
+    })
+  },
+  PortfolioItem: {
+    githubLinks: parent => parent.links.filter(link => link.type.name === LinkTypes.Github),
+    productLinks: parent => parent.links.filter(link => link.type.name === LinkTypes.Product)
   }
-  // Link: {
-  //   async type(parent, args, context) {
-  //     console.log('PARENT', parent)
-  //     return await context.prisma.linkType.findUnique({ where: { id: parent.linkTypeId } })
-  //   }
-  // }
 }
 
 export default resolvers

@@ -6,17 +6,17 @@ export interface SeedPortfolioItemLinkType {
 }
 
 export interface SeedPortfolioItemType {
+  categories: string[]
   description: string
+  githubLinks: SeedPortfolioItemLinkType[]
   homeImage: string
   id: number
-  projectId: string
   images: string[]
   name: string
   primaryImage: string
-  products: string[]
-  categories: string[]
-  githubLinks: SeedPortfolioItemLinkType[]
   productLinks: SeedPortfolioItemLinkType[]
+  products: string[]
+  projectId: string
 }
 
 const portfolioItemArray: SeedPortfolioItemType[] = [
@@ -27,15 +27,15 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     productLinks: [],
     projectId: 'dropzio',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1-1/dropziomocksquare_b2vyb8lrkH.jpg',
-    products: [ 'Logo','Mobile App' ],
+    products: [ 'Logo', 'Mobile App' ],
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1-1/dropzio_E0JxTuxn7.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock1_Bx_s99zIM.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock2_1ggb_UkV6.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock3_-eefbAb6j5.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock4_kMtxQ6n8Wd.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock1_Bx_s99zIM.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock2_1ggb_UkV6.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock3_-eefbAb6j5.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1400-2022/dropziomock4_kMtxQ6n8Wd.jpg' ],
     githubLinks: [{
       isInternal: false,
       id: 1,
       url: 'https://github.com/kelleghan1/dropzioApp2/',
       label: 'View front end Github'
-    },{
+    }, {
       isInternal: false,
       id: 2,
       url: 'https://github.com/kelleghan1/dropzio_server/',
@@ -71,19 +71,19 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     products: [ 'Logo' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediagrey_ssSTGmmM-.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediagrey_ssSTGmmM-.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediawhite_jtQX8h3Oj.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediablack_YcYKRv3dX.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediawhite_jtQX8h3Oj.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/silverline-media/tr:w-720,ar-1-1/silverlinemediablack_YcYKRv3dX.jpg' ],
     description: 'Silverline Media offers photo and video production services. The logo was created using Adobe Illustrator.'
   },
   {
-    categories: [ 'design','development' ],
+    categories: [ 'design', 'development' ],
     name: 'Carvell Design + Build',
     id: 4,
     githubLinks: [],
     projectId: 'carvell',
-    products: [ 'Brand','Website' ],
+    products: [ 'Brand', 'Website' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellsitemock-square_jeQbNSMds.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvell_SElIRCSph.png',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellsitemock-square_jeQbNSMds.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellwhite__63zGVZDz.png' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellsitemock-square_jeQbNSMds.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellwhite__63zGVZDz.png' ],
     productLinks: [{
       isInternal: false,
       id: 99,
@@ -93,15 +93,15 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     description: 'Carvell Design + Build is a full service design and build firm that specializes in customized remodels and restoration, additions, and new construction work. The logo was created with Adobe Illustrator and the Carvell website was created using Wordpress.'
   },
   {
-    categories: [ 'design','development' ],
+    categories: [ 'design', 'development' ],
     name: 'Flight Switch',
     id: 5,
     productLinks: [],
     projectId: 'flightswitch',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchblack_b_g4OmDsi.jpg',
-    products: [ 'Logo','Shirt Designs','Online Store' ],
+    products: [ 'Logo', 'Shirt Designs', 'Online Store' ],
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchblack_b_g4OmDsi.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchsitemock_NCHEmQYC-.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchwhite_FFWX7SQ3d.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtastro_OEW5cGtn-Q.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtcity_Uki_5gzIZl.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtflag_KX8rhDAT4y.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtsoldier_yXcMkDynND.png' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchsitemock_NCHEmQYC-.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/flightswitchwhite_FFWX7SQ3d.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtastro_OEW5cGtn-Q.png', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtcity_Uki_5gzIZl.png', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtflag_KX8rhDAT4y.png', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/flightswitch/tr:w-720,ar-1-1/shirtsoldier_yXcMkDynND.png' ],
     githubLinks: [{
       isInternal: false,
       id: 3,
@@ -120,7 +120,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     products: [ 'Logo' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzflames_la6pwSJG1N.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzflames_la6pwSJG1N.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzsign_Kd5bvPsH2K.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzwhite_X4Inkg-hp.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzsign_Kd5bvPsH2K.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/grillerz/tr:w-720,ar-1-1/grillerzwhite_X4Inkg-hp.jpg' ],
     description: 'Grillerz Pub is a bar and restaurant in Englewood, Colorado. The logo was created using Adobe Illustrator.'
   },
   {
@@ -143,7 +143,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
       id: 5,
       label: 'View on Github (Angular)',
       url: 'https://github.com/kelleghan1/knight/'
-    },{
+    }, {
       isInternal: false,
       id: 6,
       label: 'View on Github (React, NPM package)',
@@ -161,7 +161,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     products: [ 'Logo' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/sunshine-tree-farm/tr:w-720,ar-1-1/sunshinetreefarmwhite_S0yxmmJcN.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/sunshine-tree-farm/tr:w-720,ar-1-1/sunshinetreefarmwhite_S0yxmmJcN.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/sunshine-tree-farm/tr:w-720,ar-1-1/sunshinetreefarmgreen_FdpiJWA6P.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/sunshine-tree-farm/tr:w-720,ar-1-1/sunshinetreefarmblack_tYwOECyH8.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/sunshine-tree-farm/tr:w-720,ar-1-1/sunshinetreefarmgreen_FdpiJWA6P.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/sunshine-tree-farm/tr:w-720,ar-1-1/sunshinetreefarmblack_tYwOECyH8.jpg' ],
     description: 'Sunshine Tree Farm grows and sell a variety of trees in Colorado. The logo was created with Adobe Illustrator.'
   },
   {
@@ -200,7 +200,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
         url: 'https://github.com/MatieuB/yodel/'
       }
     ],
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock_CTau4Lccl.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock1_mo_RtNbq4.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock3_XLu48cQsx.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock4_kSOp_TZZsL.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock_CTau4Lccl.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock1_mo_RtNbq4.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock3_XLu48cQsx.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/yodel/tr:w-720,ar-1400-2022/yodelmock4_kSOp_TZZsL.jpg' ],
     description: 'Yodel is a social geolocation hybrid app designed to promote meeting new people and face to face interaction. The app allows users to see others within a custom range and send those users messages. It was created in Ionic and Cordova and written in AngularJS. It leverages an Express back end with Knex and SQL to manage users and their location data. The logo was created using Adobe Illustrator.'
   },
   {
@@ -213,7 +213,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     projectId: 'jamfactory',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactorywhite_FSzRXarCc.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactorywhite_FSzRXarCc.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactoryblack_MnvFdJtCY7.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactoryblackandwhite_Q09rWb8wn.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactoryblack_MnvFdJtCY7.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/jam-factory/tr:w-720,ar-1-1/jamfactoryblackandwhite_Q09rWb8wn.jpg' ],
     description: 'Jam Factory is a music and entertainment event coordination and promotion company. The logo was created using Adobe Illustrator.'
   },
   {
@@ -226,20 +226,20 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     projectId: 'revmatek',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekorange_UYq3DUNd4.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekorange_UYq3DUNd4.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekblack_omDHIsiWP.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekwhite_WPcaZtP4b.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekblack_omDHIsiWP.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/revmatek/tr:w-720,ar-1-1/revmatekwhite_WPcaZtP4b.jpg' ],
     description: 'Revmatek offers peer to peer streaming service and solutions. The logo was created using Adobe Illustrator.'
   },
   {
-    categories: [ 'design','development' ],
+    categories: [ 'design', 'development' ],
     name: 'Family Home Health',
     id: 13,
     githubLinks: [],
     productLinks: [],
     projectId: 'familyhomehealth',
-    products: [ 'Brochure','Website' ],
+    products: [ 'Brochure', 'Website' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhsite-square_fSanw_PqU.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhsite-square_fSanw_PqU.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhbrochuresquare-inside_lBILZhAJA.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhbrochuresquare-outside_DQUbi1HuP.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhbrochuresquare-inside_lBILZhAJA.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-home-health/tr:w-720,ar-1-1/fhhbrochuresquare-outside_DQUbi1HuP.jpg' ],
     description: 'Family Home Health is a Colorado based company that offers health care at the homes of their patients. Their trifold brochure was created using Adobe Indesign, Adobe Illustrator, and Adobe Photoshop. The Family Home Health website was created in Wordpress.'
   },
   {
@@ -249,10 +249,10 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     githubLinks: [],
     productLinks: [],
     projectId: 'purplerstateproductions',
-    products: [ 'Logo','Event Poster' ],
+    products: [ 'Logo', 'Event Poster' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1-1/purplestateblack_cQUWZop-B.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1-1/purplestateblack_cQUWZop-B.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1000-1318/purplestatepostermock_irUDvOs0M.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1-1/purplestatewhite_U7iHBf6fB.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1000-1318/purplestatepostermock_irUDvOs0M.png', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/purple-state/tr:w-720,ar-1-1/purplestatewhite_U7iHBf6fB.jpg' ],
     description: 'Purple State organizes shows and music related events. The logo was created using Adobe Illustrator. The event poster was created using Adobe Illustrator, Adobe Photoshop, and Adobe InDesign.'
   },
   {
@@ -262,10 +262,10 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     githubLinks: [],
     productLinks: [],
     projectId: 'risingsun',
-    products: [ 'Logo','Album Cover','Booklet' ],
+    products: [ 'Logo', 'Album Cover', 'Booklet' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsuncover_uJxKqrSp8.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsuncover_uJxKqrSp8.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsunbook_LWWfyLLFL.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsundisc_-jBqOOSUH.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsunlogo_27Oap8ULNG.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsunbook_LWWfyLLFL.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsundisc_-jBqOOSUH.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/rising-sun/tr:w-720,ar-1-1/risingsunlogo_27Oap8ULNG.jpg' ],
     description: 'Rising sun is an English DJ and producer. The album cover and logo were created using Adobe Illustrator, Adobe Photoshop, and Adobe InDesign.'
   },
   {
@@ -313,16 +313,16 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     description: 'Craft Health is a leading home health and hospice provider in Colorado offering Skilled Nursing, Physical Therapy, Speech Therapy, CNA services, and more. The logo was created in Adobe Illustrator.'
   },
   {
-    categories: [ 'design','development' ],
+    categories: [ 'design', 'development' ],
     name: 'Family Hospice',
     id: 89,
     projectId: 'familyhospice',
     githubLinks: [],
     productLinks: [],
-    products: [ 'Brochure','Website' ],
+    products: [ 'Brochure', 'Website' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicesite-square_rwxgRVU8Q.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicesite-square_rwxgRVU8Q.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicebrochuresquare-inside_3lyerYFWo.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicebrochuresquare-outside_HN-6nP7_s.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicebrochuresquare-inside_3lyerYFWo.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/family-hospice/tr:w-720,ar-1-1/familyhospicebrochuresquare-outside_HN-6nP7_s.jpg' ],
     description: 'Family Hospice is an end of life care service. They serve patients at their homes in order to maximize quality of life. Their brochure was creaed using Adobe Illustrator, Adobe InDesign, and Adobe Photoshop. The Family Hospice website was created using the Adobe Creative Suite and Wordpress.'
   },
   {
@@ -335,7 +335,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     products: [ 'Logo' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkerswhite_DN4hyMRXz.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkerswhite_DN4hyMRXz.jpg',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkerspink_EH8gRDqaS.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkersblack_dC_jfmX3Q.jpg' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkerspink_EH8gRDqaS.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/moonwalkers/tr:w-720,ar-1-1/moonwalkersblack_dC_jfmX3Q.jpg' ],
     description: 'Moonwalkers is an all cancer benefit and fundraising team. Their logo was created using Adobe Illustrator.'
   },
   {
@@ -348,7 +348,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     products: [ 'Logo, Menu, Website' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehouseblack_5WIbDqnQ6.png',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehouseblack_5WIbDqnQ6.png',
-    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousesite-square_G5__dLkld.jpg','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousewhite_P7g4Vkk6g.png','https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1200-800/absinthemenumockup_1DnD6-KNl.png' ],
+    images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousesite-square_G5__dLkld.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousewhite_P7g4Vkk6g.png', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1200-800/absinthemenumockup_1DnD6-KNl.png' ],
     description: 'Absinthe House is a bar and nightclub in Boulder, Colorado. Adobe Illustrator and Adobe InDesign were used to create the vector banner and menu. The Absinthe House website was designed using Adobe Illustrator and built in Wix.'
   }]
 
