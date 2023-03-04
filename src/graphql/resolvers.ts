@@ -6,7 +6,7 @@ const resolvers: Resolvers = {
     links: (_parent, _args, context) => context.prisma.link.findMany({ include: { type: true } }),
     linkTypes: (_parent, _args, context) => context.prisma.linkType.findMany(),
     categories: (_parent, _args, context) => context.prisma.category.findMany(),
-    projectImages: (_parent, _args, context) => context.prisma.image.findMany(),
+    projectImages: (_parent, _args, context) => context.prisma.projectImage.findMany(),
     products: (_parent, _args, context) => context.prisma.product.findMany(),
     portfolioItems: (_parent, _args, context) => context.prisma.portfolioItem.findMany({
       include: {
