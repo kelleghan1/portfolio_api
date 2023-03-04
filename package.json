@@ -1,14 +1,14 @@
 {
   "name": "portfolio-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Kelleghan Design Portfolio API",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev --transpile-only --no-notify --exit-child src/index.ts",
     "generate": "graphql-codegen",
     "lint": "eslint . --ext .ts"
   },
-  "author": "",
+  "author": "Coleman Kelleghan",
   "license": "ISC",
   "devDependencies": {
     "@graphql-codegen/cli": "^2.7.0",
