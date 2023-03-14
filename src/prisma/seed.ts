@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import portfolioItemArray from '../utils/portfolioData'
+import portfolioItemArray from './portfolioData'
 
 const prisma = new PrismaClient()
 
