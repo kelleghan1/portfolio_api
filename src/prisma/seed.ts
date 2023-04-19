@@ -6,16 +6,16 @@ const prisma = new PrismaClient()
 async function main() {
   for (let i = 0; i < portfolioItemArray.length; i++) {
     const {
-      name,
-      projectId,
-      homeImage,
-      primaryImage,
-      products,
       categories,
-      githubLinks,
-      productLinks,
       description,
-      images
+      githubLinks,
+      homeImage,
+      images,
+      name,
+      primaryImage,
+      productLinks,
+      products,
+      projectId
     } = portfolioItemArray[i]
 
     await prisma.portfolioItem.upsert({

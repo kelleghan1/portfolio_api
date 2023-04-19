@@ -8,6 +8,7 @@
     "strict": true,
     "rootDir": ".",
     "sourceMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   }
 }

@@ -1,12 +1,20 @@
-FROM node:16-alpine
+# Stage 1
+FROM node:16-alpine as builder
 
-WORKDIR /build
+WORKDIR /app
 
-COPY . .
+COPY ./package-lock.json .
+
+COPY ./package.json .
 
 RUN npm install
 
+COPY . .
+
 RUN npm run build
+
+# Stage 2
+FROM node:16-alpine
 
 WORKDIR /app
 
@@ -14,15 +22,15 @@ COPY package.json .
 
 COPY package-lock.json .
 
+RUN npm install --production
+
 WORKDIR /app/src/prisma
 
 COPY src/prisma ./
 
 WORKDIR /app
 
-RUN npm install --production
-
-RUN mv /build/dist/index.js ./index.js
+COPY --from=builder /app/dist/index.js .
 
 RUN npm run prisma-init
 

@@ -22,8 +22,26 @@ export interface SeedPortfolioItemType {
 const portfolioItemArray: SeedPortfolioItemType[] = [
   {
     categories: [ 'development' ],
-    name: 'Dropzio',
+    name: 'Fantasy Team Advice',
     id: 1,
+    githubLinks: [],
+    projectId: 'fantasyteamadvice',
+    products: [ 'Fantasy Sports Platform' ],
+    homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/fantasy-team-advice/tr:w-720,ar-1-1/ftasitemocks-quare_Nk9p8yTg9.jpeg',
+    primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/fantasy-team-advice/tr:w-720,ar-1-1/ftasitemocks-quare_Nk9p8yTg9.jpeg',
+    images: [],
+    productLinks: [{
+      isInternal: false,
+      id: 22,
+      label: 'Visit Fantasy Team Advice',
+      url: 'https://fantasyteamadvice.com/'
+    }],
+    description: 'The Fantasy Team Advice platform provides a comprehensive suite of fantasy tools, content, and advice for thousands of active fantasy sports players. It offers a subscription service with multiple tiers, lineup generators, and advanced sports data analysis tools for more than eight sports leagues. The front end is built on React served by a Node/Express back end and hosted on an AWS EC2 linux instance with Postgres and SQL. Several independent Node APIs are used to aggregate live sports data stored in the application database. Lineups are generated in an independent AWS Lambda Python function and relayed back to the client in real time using websockets. Recurring subscriptions are managed by Stripe and PayPal and synchronized with the application database via webhooks.'
+  },
+  {
+    categories: [ 'development', 'design' ],
+    name: 'Dropzio',
+    id: 2,
     productLinks: [],
     projectId: 'dropzio',
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/dropzio/tr:w-720,ar-1-1/dropziomocksquare_b2vyb8lrkH.jpg',
@@ -42,24 +60,6 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
       label: 'View back end on Github'
     }],
     description: 'Dropzio is a geolocation hybrid app that allows users to post images and messages to their current location. The posts then become visible to other users in the vicinity. Dropzio was created with Cordova and Ionic and was written in AngularJS. The back end was created using Ruby on Rails and manages users, posts, and geographic data. The logo was created with Adobe Illustrator.'
-  },
-  {
-    categories: [ 'development' ],
-    name: 'Fantasy Team Advice',
-    id: 2,
-    githubLinks: [],
-    projectId: 'fantasyteamadvice',
-    products: [ 'Fantasy Sports Platform' ],
-    homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/fantasy-team-advice/tr:w-720,ar-1-1/ftasitemocks-quare_Nk9p8yTg9.jpeg',
-    primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/fantasy-team-advice/tr:w-720,ar-1-1/ftasitemocks-quare_Nk9p8yTg9.jpeg',
-    images: [],
-    productLinks: [{
-      isInternal: false,
-      id: 22,
-      label: 'Visit Fantasy Team Advice',
-      url: 'https://fantasyteamadvice.com/'
-    }],
-    description: 'The Fantasy Team Advice platform provides a comprehensive suite of fantasy tools, content, and advice for thousands of active fantasy sports players. It offers a subscription service with multiple tiers, lineup generators, and advanced sports data analysis tools for more than eight sports leagues. The front end is built on React served by a Node/Express back end and hosted on an AWS EC2 linux instance with Postgres and SQL. Several independent Node APIs are used to aggregate live sports data stored in the application database. Lineups are generated in an independent AWS Lambda Python function and relayed back to the client in real time using websockets. Recurring subscriptions are managed by Stripe and PayPal and synchronized with the application database via webhooks.'
   },
   {
     categories: [ 'design' ],
