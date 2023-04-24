@@ -32,9 +32,7 @@ WORKDIR /app
 
 COPY --from=builder /app/dist/index.js .
 
-RUN npm run prisma-init
-
-RUN rm -rf /build
+RUN npm run prisma:migrate
 
 EXPOSE 4000
 
