@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: portfolio-api-service
+  name: {{ .Values.appName }}-service
+  namespace: {{ .Values.namespace }}
 spec:
   type: LoadBalancer
   selector:
-    app: portfolio-api
+    app: {{ .Values.appName }}
   ports:
     - protocol: TCP
       port: 4000
