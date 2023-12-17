@@ -1,7 +1,7 @@
 {
   "name": "portfolio-api",
   "version": "1.0.0",
-  "description": "Kelleghan Design Portfolio API",
+  "description": "Kelldev Design Portfolio API",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.prod.ts",
     "generate": "graphql-codegen",
