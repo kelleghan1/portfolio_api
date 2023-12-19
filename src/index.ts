@@ -4,7 +4,8 @@ import { context } from './graphql/context'
 
 export const server = new ApolloServer({
   schema: executableSchema,
-  context
+  context,
+  cors: { origin: [ 'https://kelldev.design', 'https://kelleghandesign.com' ] }
 })
 
 const port = 4000
