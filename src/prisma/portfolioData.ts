@@ -345,7 +345,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     githubLinks: [],
     productLinks: [],
     projectId: 'absinthehouse',
-    products: [ 'Logo, Menu, Website' ],
+    products: [ 'Logo', 'Menu', 'Website' ],
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehouseblack_5WIbDqnQ6.png',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehouseblack_5WIbDqnQ6.png',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousesite-square_G5__dLkld.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1-1/absinthehousewhite_P7g4Vkk6g.png', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/absinthe-house/tr:w-720,ar-1200-800/absinthemenumockup_1DnD6-KNl.png' ],
