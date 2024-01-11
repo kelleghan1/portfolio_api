@@ -6,7 +6,12 @@ import { Configuration } from 'webpack'
 const config = merge<Configuration>(common, {
   mode: 'development',
   plugins: [
-    new WebpackShellPluginNext({ onBuildEnd: { scripts: [ 'nodemon dist/index.js' ] } })
+    new WebpackShellPluginNext({
+      onBuildEnd: {
+        parallel: true,
+        scripts: [ 'nodemon dist/index.js' ]
+      }
+    })
   ],
   watch: true
 })
