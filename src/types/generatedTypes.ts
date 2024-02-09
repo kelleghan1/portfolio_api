@@ -5,6 +5,7 @@ export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -20,6 +21,14 @@ export type Category = {
   name: Scalars['String'];
 };
 
+export type CreatePortfolioItemResponse = {
+  __typename?: 'CreatePortfolioItemResponse';
+  code: Scalars['Int'];
+  message: Scalars['String'];
+  portfolioItem?: Maybe<PortfolioItem>;
+  success: Scalars['Boolean'];
+};
+
 export type Link = {
   __typename?: 'Link';
   id: Scalars['Int'];
@@ -33,6 +42,24 @@ export type LinkType = {
   __typename?: 'LinkType';
   id: Scalars['Int'];
   name: Scalars['String'];
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  createPortfolioItem?: Maybe<CreatePortfolioItemResponse>;
+};
+
+
+export type MutationCreatePortfolioItemArgs = {
+  categories: Array<Scalars['Int']>;
+  description: Scalars['String'];
+  homeImage: Scalars['Int'];
+  links: Array<Scalars['Int']>;
+  name: Scalars['String'];
+  primaryImage: Scalars['Int'];
+  products: Array<Scalars['Int']>;
+  projectId: Scalars['String'];
+  projectImages: Array<Scalars['Int']>;
 };
 
 export type PortfolioItem = {
@@ -145,9 +172,11 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
   Category: ResolverTypeWrapper<Category>;
+  CreatePortfolioItemResponse: ResolverTypeWrapper<CreatePortfolioItemResponse>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Link: ResolverTypeWrapper<Link>;
   LinkType: ResolverTypeWrapper<LinkType>;
+  Mutation: ResolverTypeWrapper<{}>;
   PortfolioItem: ResolverTypeWrapper<PortfolioItem>;
   Product: ResolverTypeWrapper<Product>;
   ProjectImage: ResolverTypeWrapper<ProjectImage>;
@@ -159,9 +188,11 @@ export type ResolversTypes = ResolversObject<{
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean'];
   Category: Category;
+  CreatePortfolioItemResponse: CreatePortfolioItemResponse;
   Int: Scalars['Int'];
   Link: Link;
   LinkType: LinkType;
+  Mutation: {};
   PortfolioItem: PortfolioItem;
   Product: Product;
   ProjectImage: ProjectImage;
@@ -172,6 +203,14 @@ export type ResolversParentTypes = ResolversObject<{
 export type CategoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = ResolversObject<{
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CreatePortfolioItemResponseResolvers<ContextType = Context, ParentType extends ResolversParentTypes['CreatePortfolioItemResponse'] = ResolversParentTypes['CreatePortfolioItemResponse']> = ResolversObject<{
+  code?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  message?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  portfolioItem?: Resolver<Maybe<ResolversTypes['PortfolioItem']>, ParentType, ContextType>;
+  success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -188,6 +227,10 @@ export type LinkTypeResolvers<ContextType = Context, ParentType extends Resolver
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
+  createPortfolioItem?: Resolver<Maybe<ResolversTypes['CreatePortfolioItemResponse']>, ParentType, ContextType, RequireFields<MutationCreatePortfolioItemArgs, 'categories' | 'description' | 'homeImage' | 'links' | 'name' | 'primaryImage' | 'products' | 'projectId' | 'projectImages'>>;
 }>;
 
 export type PortfolioItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PortfolioItem'] = ResolversParentTypes['PortfolioItem']> = ResolversObject<{
@@ -229,8 +272,10 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
 
 export type Resolvers<ContextType = Context> = ResolversObject<{
   Category?: CategoryResolvers<ContextType>;
+  CreatePortfolioItemResponse?: CreatePortfolioItemResponseResolvers<ContextType>;
   Link?: LinkResolvers<ContextType>;
   LinkType?: LinkTypeResolvers<ContextType>;
+  Mutation?: MutationResolvers<ContextType>;
   PortfolioItem?: PortfolioItemResolvers<ContextType>;
   Product?: ProductResolvers<ContextType>;
   ProjectImage?: ProjectImageResolvers<ContextType>;
