@@ -41,6 +41,13 @@ type PortfolioItem {
   projectId: String!
 }
 
+type CreatePortfolioItemResponse {
+  code: Int!
+  success: Boolean!
+  message: String!
+  portfolioItem: PortfolioItem
+}
+
 type Query {
   links: [Link!]!
   projectImages: [ProjectImage!]!
@@ -48,4 +55,18 @@ type Query {
   products: [Product!]!
   linkTypes: [LinkType!]!
   portfolioItems: [PortfolioItem!]!
+}
+
+type Mutation {
+  createPortfolioItem(
+    categories: [Int!]!
+    description: String!
+    links: [Int!]!
+    homeImage: Int!
+    projectImages: [Int!]!
+    name: String!
+    primaryImage: Int!
+    products: [Int!]!
+    projectId: String!
+  ): CreatePortfolioItemResponse
 }

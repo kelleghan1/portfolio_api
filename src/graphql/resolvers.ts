@@ -27,9 +27,57 @@ const resolvers: Resolvers = {
       }
     })
   },
+  Mutation: {
+    createPortfolioItem: async (_parent, args, context) => {
+      return context.prisma.portfolioItem.create({
+        data: {
+          categories: { connect: args.categories.map(id => ({ id })) },
+          description: args.description,
+          name: args.name,
+          homeImage: { connect: { id: args.homeImage } },
+          primaryImage: { connect: { id: args.primaryImage } },
+          projectId: args.projectId,
+          products: { connect: args.products.map(id => ({ id })) },
+          projectImages: { connect: args.projectImages.map(id => ({ id })) },
+          links: { connect: args.links.map(id => ({ id })) }
+        },
+        include: {
+          products: true,
+          links: {
+            select: {
+              id: true,
+              url: true,
+              label: true,
+              type: true,
+              isInternal: true
+            }
+          },
+          projectImages: true,
+          primaryImage: true,
+          homeImage: true,
+          categories: true
+        }
+      })
+        .then(res => ({
+          code: 200,
+          success: true,
+          message: 'Success',
+          portfolioItem: ({
+            ...res,
+            projectLinks: [],
+            githubLinks: []
+          })
+        }))
+        .catch(error => ({
+          code: 500,
+          success: false,
+          message: error.message ?? 'Error'
+        }))
+    }
+  },
   PortfolioItem: {
-    githubLinks: parent => parent.links.filter(link => link.type.name === LinkTypes.Github),
-    productLinks: parent => parent.links.filter(link => link.type.name === LinkTypes.Product)
+    githubLinks: parent => parent?.links?.filter(link => link?.type?.name === LinkTypes.Github) ?? [],
+    productLinks: parent => parent?.links?.filter(link => link?.type?.name === LinkTypes.Product) ?? []
   }
 }
 
