@@ -84,12 +84,7 @@ const portfolioItemArray: SeedPortfolioItemType[] = [
     homeImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellsitemock-square_jeQbNSMds.jpg',
     primaryImage: 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvell_SElIRCSph.png',
     images: [ 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellsitemock-square_jeQbNSMds.jpg', 'https://ik.imagekit.io/l1kppwkihn2/Kelleghan_Design/carvell/tr:w-720,ar-1-1/carvellwhite__63zGVZDz.png' ],
-    productLinks: [{
-      isInternal: false,
-      id: 99,
-      label: 'Visit Carvell Design + Build',
-      url: 'https://carvelldesignbuild.com/'
-    }],
+    productLinks: [],
     description: 'Carvell Design + Build is a full service design and build firm that specializes in customized remodels and restoration, additions, and new construction work. The logo was created with Adobe Illustrator and the Carvell website was created using Wordpress.'
   },
   {
