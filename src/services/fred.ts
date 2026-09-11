@@ -5,6 +5,12 @@ import { SeriesDefinition } from './seriesRegistry'
 const FRED_OBSERVATIONS_URL = 'https://api.stlouisfed.org/fred/series/observations'
 const DEFAULT_OBSERVATION_START = '2000-01-01'
 const DEFAULT_TTL_HOURS = 12
+const DEFAULT_POLL_TTL_HOURS = 1
+// FRED publishes a business day's yields with the Fed's H.15 release at 4:15pm ET, which is
+// 20:15 UTC under EDT and 21:15 UTC under EST. Treating a day's print as expected only from
+// 22:00 UTC clears both without a timezone database, and 22:00 UTC is still the same calendar
+// day in ET, so the UTC date is also the print date.
+const PRINT_RELEASE_HOUR_UTC = 22
 const UPSERT_BATCH_SIZE = 500
 // FRED revises published values after the fact, so an incremental refresh re-requests a
 // trailing window rather than starting exactly at the newest stored observation. Without
@@ -27,16 +33,72 @@ export interface ParsedObservation {
   value: number;
 }
 
-export const ttlHours = (): number => {
-  const configured = Number(process.env.FRED_TTL_HOURS)
+const readTtlHours = (configured: string | undefined, fallback: number): number => {
+  const hours = Number(configured)
 
-  return Number.isFinite(configured) && configured > 0 ? configured : DEFAULT_TTL_HOURS
+  return Number.isFinite(hours) && hours > 0 ? hours : fallback
 }
 
-export const isStale = (lastFetchedAt: Date | null): boolean => {
-  if (!lastFetchedAt) return true
+/**
+ * How long a series stays fresh once it already holds the newest print FRED is expected to
+ * have published. Nothing new can arrive until the next release, so this can be generous.
+ */
+export const ttlHours = (): number => readTtlHours(process.env.FRED_TTL_HOURS, DEFAULT_TTL_HOURS)
 
-  return Date.now() - lastFetchedAt.getTime() > ttlHours() * 60 * 60 * 1000
+/**
+ * How long a series stays fresh while the newest expected print is still missing. Shorter,
+ * so a new print is picked up soon after FRED publishes it rather than at the next full TTL.
+ * Clamped to `ttlHours()` so a deliberately short settled TTL is never slowed down by it.
+ */
+export const pollTtlHours = (): number =>
+  Math.min(readTtlHours(process.env.FRED_POLL_TTL_HOURS, DEFAULT_POLL_TTL_HOURS), ttlHours())
+
+/**
+ * The most recent date FRED is expected to hold a value for: the latest weekday whose H.15
+ * release time has passed, as a UTC midnight Date to match how observations are stored.
+ *
+ * Market holidays are deliberately not modelled -- there is no print to find on one, so a
+ * holiday simply keeps the polling TTL in force until the next real print lands.
+ */
+export const lastExpectedPrintDate = (now: Date = new Date()): Date => {
+  const expected = new Date(now)
+
+  if (expected.getUTCHours() < PRINT_RELEASE_HOUR_UTC) expected.setUTCDate(expected.getUTCDate() - 1)
+
+  expected.setUTCHours(0, 0, 0, 0)
+
+  // 0 is Sunday and 6 is Saturday; neither ever has a print, so walk back to Friday
+  while (expected.getUTCDay() === 0 || expected.getUTCDay() === 6) {
+    expected.setUTCDate(expected.getUTCDate() - 1)
+  }
+
+  return expected
+}
+
+export type Freshness = 'fresh' | 'stale' | 'undecided'
+
+/**
+ * Classifies a series on elapsed time alone. `undecided` means the answer depends on whether
+ * the series is already holding the newest expected print, which costs a query to find out.
+ */
+export const freshness = (lastFetchedAt: Date | null): Freshness => {
+  if (!lastFetchedAt) return 'stale'
+
+  const elapsedHours = (Date.now() - lastFetchedAt.getTime()) / (60 * 60 * 1000)
+
+  if (elapsedHours <= pollTtlHours()) return 'fresh'
+
+  return elapsedHours > ttlHours() ? 'stale' : 'undecided'
+}
+
+export const isStale = (lastFetchedAt: Date | null, newestObservation?: Date | null): boolean => {
+  const state = freshness(lastFetchedAt)
+
+  if (state !== 'undecided') return state === 'stale'
+
+  // Past the polling TTL but short of the settled one: refresh only while the newest print
+  // FRED should have is still missing, so a series that is already current is left alone.
+  return !newestObservation || newestObservation.getTime() < lastExpectedPrintDate().getTime()
 }
 
 const requireApiKey = (): string => {
@@ -114,24 +176,28 @@ const persistObservations = async (
   }
 }
 
-/**
- * The date an incremental refresh should request from: the series' newest stored
- * observation, less the revision overlap. A series with no observations yet has no
- * anchor, so it falls back to a full history fetch.
- */
-const resolveObservationStart = async (
+const newestObservationDate = async (
   prisma: PrismaClient,
   seriesId: number
-): Promise<string> => {
+): Promise<Date | null> => {
   const newest = await prisma.marketObservation.findFirst({
     where: { seriesId },
     orderBy: { date: 'desc' },
     select: { date: true }
   })
 
+  return newest?.date ?? null
+}
+
+/**
+ * The date an incremental refresh should request from: the series' newest stored
+ * observation, less the revision overlap. A series with no observations yet has no
+ * anchor, so it falls back to a full history fetch.
+ */
+const resolveObservationStart = (newest: Date | null): string => {
   if (!newest) return DEFAULT_OBSERVATION_START
 
-  const start = new Date(newest.date)
+  const start = new Date(newest)
 
   start.setUTCDate(start.getUTCDate() - REVISION_OVERLAP_DAYS)
 
@@ -152,6 +218,12 @@ export interface RefreshEntry {
  * than the full history while still absorbing FRED's revisions to recent values. A series
  * with no observations yet fetches from DEFAULT_OBSERVATION_START.
  *
+ * Staleness is publication-aware: a series that already holds the newest print FRED is
+ * expected to have keeps the long TTL, while one that is behind is rechecked on the short
+ * polling TTL. Deciding that needs the series' newest observation, which is read only when
+ * the clock alone cannot settle it -- and is then reused as the fetch's start anchor, so a
+ * refresh costs no more queries than before.
+ *
  * The FRED requests all run concurrently; the writes are then applied one series at a time
  * because SQLite serialises writers anyway and parallel write transactions exhaust the
  * connection pool. A failing series is logged and skipped so the remaining series can still
@@ -163,14 +235,30 @@ export const refreshStaleSeries = async (
   prisma: PrismaClient,
   entries: RefreshEntry[]
 ): Promise<number> => {
-  const stale = entries.filter(entry => !entry.definition.derived && isStale(entry.series.lastFetchedAt))
+  const candidates = entries.filter(entry => !entry.definition.derived)
+
+  const assessed = await Promise.all(candidates.map(async entry => {
+    const state = freshness(entry.series.lastFetchedAt)
+
+    // A fresh series is skipped outright, so its newest observation is never worth a query
+    const newest = state === 'fresh' ? null : await newestObservationDate(prisma, entry.series.id)
+
+    return {
+      entry,
+      newest,
+      stale: state === 'undecided' ? isStale(entry.series.lastFetchedAt, newest) : state === 'stale'
+    }
+  }))
+
+  const stale = assessed.filter(assessment => assessment.stale)
 
   if (!stale.length) return 0
 
-  const starts = await Promise.all(stale.map(entry => resolveObservationStart(prisma, entry.series.id)))
-
   const fetched = await Promise.allSettled(
-    stale.map((entry, index) => fetchObservations(entry.definition.fredId, starts[index]))
+    stale.map(({ entry, newest }) => fetchObservations(
+      entry.definition.fredId,
+      resolveObservationStart(newest)
+    ))
   )
 
   const failures: unknown[] = []
@@ -178,7 +266,7 @@ export const refreshStaleSeries = async (
 
   for (let index = 0; index < stale.length; index += 1) {
     const result = fetched[index]
-    const { series } = stale[index]
+    const { series } = stale[index].entry
 
     if (result.status === 'rejected') {
       failures.push(result.reason)
