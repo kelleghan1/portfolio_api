@@ -33,6 +33,10 @@ jobs:
         run: |
           set -euo pipefail
 
+          POLL_INTERVAL_SECONDS=15
+          POLL_TIMEOUT_MINUTES=45
+          POLL_ATTEMPTS=$(( POLL_TIMEOUT_MINUTES * 60 / POLL_INTERVAL_SECONDS ))
+
           command_id=$(aws ssm send-command \
             --document-name AWS-RunShellScript \
             --targets "Key=instanceids,Values=${{ vars.AWS_INSTANCE_ID }}" \
@@ -46,8 +50,15 @@ jobs:
           # Poll rather than `aws ssm wait command-executed`: the waiter gives up
           # after ~100s, but npm ci plus a webpack build on a t4g.nano runs well
           # past that, and a still-running deploy would be reported as a failure.
+          #
+          # The box is not consistent: a warm deploy finishes in ~5 minutes, but a
+          # cold one has been measured at 26m21s, most likely burning through the
+          # t4g.nano's CPU credits during the build. The ceiling is therefore set
+          # well clear of that, because giving up early is worse than waiting --
+          # it reports a deploy that went on to succeed as a failure, which is
+          # what sent the 2026-09-12 run red while the instance finished fine.
           status=Pending
-          for _ in $(seq 1 100); do
+          for _ in $(seq 1 $POLL_ATTEMPTS); do
             status=$(aws ssm get-command-invocation \
               --command-id "$command_id" \
               --instance-id "${{ vars.AWS_INSTANCE_ID }}" \
@@ -55,13 +66,23 @@ jobs:
             case "$status" in
               Success|Failed|Cancelled|TimedOut) break ;;
             esac
-            sleep 10
+            sleep "$POLL_INTERVAL_SECONDS"
           done
 
           aws ssm get-command-invocation \
             --command-id "$command_id" \
             --instance-id "${{ vars.AWS_INSTANCE_ID }}" \
             --query StandardOutputContent --output text | tail -30
+
+          # A deploy still running when the poll window closes has not failed, and
+          # must not be described as though it had: the instance may well go on to
+          # finish. Say what actually happened, and where to look for the outcome.
+          case "$status" in
+            Pending|InProgress|Delayed)
+              echo "::error::Gave up waiting after ${POLL_TIMEOUT_MINUTES} minutes; the deploy is still $status and may yet succeed on the instance. Check it with: aws ssm get-command-invocation --command-id $command_id --instance-id ${{ vars.AWS_INSTANCE_ID }}"
+              exit 1
+              ;;
+          esac
 
           if [ "$status" != "Success" ]; then
             echo "::error::deploy finished with status $status"
