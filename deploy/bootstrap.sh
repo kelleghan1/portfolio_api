@@ -99,8 +99,9 @@ chmod 600 "${APP_DIR}/.env"
 install -m 0755 "${APP_DIR}/deploy/deploy.sh" /usr/local/bin/portfolio-api-deploy
 
 ###############################################################################
-# Build, migrate, start. deploy.sh is the same path a CI deploy takes, so first
-# boot and every subsequent release run identical steps.
+# Build, migrate, start. First boot has no CI-built bundle to fetch, so this
+# runs deploy.sh's fallback path: a full install and a webpack build here on the
+# instance. Slow, and the reason that path still has to work.
 ###############################################################################
 sudo -u "${APP_USER}" -H /usr/local/bin/portfolio-api-deploy --first-boot
 

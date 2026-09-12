@@ -23,19 +23,50 @@ that never existed.
 
 ## Deploy
 
-Push to `main`. [.github/workflows/deploy.yml](../.github/workflows/deploy.yml) assumes the
-OIDC deploy role and triggers `deploy.sh` on the instance over SSM. The instance pulls,
-builds, migrates, restarts pm2 and health-checks itself; CI fails if the health check does.
+Push to `main`. [.github/workflows/deploy.yml](../.github/workflows/deploy.yml) builds the
+server bundle on the runner, publishes it as a release asset, then assumes the OIDC deploy
+role and triggers `deploy.sh` on the instance over SSM. The instance pulls, installs
+runtime dependencies, downloads the bundle, migrates, restarts pm2 and health-checks
+itself; CI fails if the health check does.
+
+The build is on the runner because the instance is bad at it. `npm ci` across all 26
+dependencies plus webpack on a t4g.nano was measured at **26m21s** once its CPU credits ran
+dry, against 30-120s for the same work on a runner. Both repos are public, so runner minutes
+are free.
+
+Two things follow from building there:
+
+- **The bundle travels as a release asset**, tagged `build-<sha>`. Tagged by commit, not
+  rolling, so the instance fetches the bundle built from exactly the commit it checked out.
+  The repo is public, so the instance needs no credentials to fetch it — which is why this
+  needs no S3 bucket and no new IAM. The workflow keeps the five most recent and deletes
+  the rest.
+- **The instance installs with `--omit=dev`**: 143 packages and 180MB, against 540 and
+  302MB for a full install. webpack, ts-loader, typescript and the codegen toolchain never
+  land on the box. The Prisma CLI is a runtime dependency, not a dev one, so
+  `prisma generate` and `prisma migrate deploy` still work there.
+
+`deploy.sh` decides between the two modes on whether `BUNDLE_URL` is set. Unset — first
+boot, a hand-deploy, or a download that fails — and it does a full install and builds
+locally, the slow path, which is why that path still has to work.
 
 Before merge, [.github/workflows/ci.yml](../.github/workflows/ci.yml) runs lint and the
 production build on every pull request. It needs no AWS credentials and no database — the
 only Prisma command it runs is `prisma generate`.
 
-By hand:
+By hand — note this builds on the instance, so expect minutes, not seconds:
 
 ```sh
 aws ssm start-session --target <instance-id>
 sudo -u ec2-user -H /usr/local/bin/portfolio-api-deploy
+```
+
+To take the fast path by hand, point it at the bundle CI already published for that commit:
+
+```sh
+sudo -u ec2-user -H env \
+  BUNDLE_URL=https://github.com/kelldev-design/portfolio_api/releases/download/build-<sha>/index.js \
+  /usr/local/bin/portfolio-api-deploy
 ```
 
 Verify:
@@ -54,8 +85,9 @@ curl -sS https://api.kelldev.design/ -H 'content-type: application/json' \
   volume; local dev points at `file:./dev.db` in the checkout. See [.env.example](../.env.example).
 - **The data volume is `prevent_destroy`** and snapshotted daily. `deploy.sh` also keeps
   the last 10 per-deploy copies under `/var/lib/portfolio-api/backups/`.
-- **`dist/` is built on the box**, not shipped. The 512MB instance relies on a 2GB
-  swapfile to get through `npm ci` and webpack.
+- **`dist/` is built in CI and shipped**, not built on the box — except on the fallback
+  path, where the 512MB instance relies on a 2GB swapfile to get through `npm ci` and
+  webpack.
 - Origin traffic is plain HTTP; TLS is CloudFront's job. The security group admits only
   CloudFront's origin-facing prefix list, so the origin is not reachable directly.
 
