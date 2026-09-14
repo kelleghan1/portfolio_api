@@ -6,10 +6,11 @@ const FRED_OBSERVATIONS_URL = 'https://api.stlouisfed.org/fred/series/observatio
 const DEFAULT_OBSERVATION_START = '2000-01-01'
 const DEFAULT_TTL_HOURS = 12
 const DEFAULT_POLL_TTL_HOURS = 1
-// FRED publishes a business day's yields with the Fed's H.15 release at 4:15pm ET, which is
-// 20:15 UTC under EDT and 21:15 UTC under EST. Treating a day's print as expected only from
-// 22:00 UTC clears both without a timezone database, and 22:00 UTC is still the same calendar
-// day in ET, so the UTC date is also the print date.
+// FRED loads the DGS series after the Fed's H.15 release at 4:15pm ET, which is 20:15 UTC
+// under EDT and 21:15 UTC under EST. Treating that day's load as done only from 22:00 UTC
+// clears both without a timezone database, and 22:00 UTC is still the same calendar day in
+// ET, so the UTC date identifies the release. Which VALUE that release carries is a
+// separate question -- see lastExpectedPrintDate.
 const PRINT_RELEASE_HOUR_UTC = 22
 const UPSERT_BATCH_SIZE = 500
 // FRED revises published values after the fact, so an incremental refresh re-requests a
@@ -53,26 +54,44 @@ export const ttlHours = (): number => readTtlHours(process.env.FRED_TTL_HOURS, D
 export const pollTtlHours = (): number =>
   Math.min(readTtlHours(process.env.FRED_POLL_TTL_HOURS, DEFAULT_POLL_TTL_HOURS), ttlHours())
 
+// 0 is Sunday and 6 is Saturday; neither ever carries a print
+const isWeekend = (date: Date): boolean => date.getUTCDay() === 0 || date.getUTCDay() === 6
+
+const previousWeekday = (date: Date): Date => {
+  const previous = new Date(date)
+
+  do {
+    previous.setUTCDate(previous.getUTCDate() - 1)
+  } while (isWeekend(previous))
+
+  return previous
+}
+
 /**
- * The most recent date FRED is expected to hold a value for: the latest weekday whose H.15
- * release time has passed, as a UTC midnight Date to match how observations are stored.
+ * The most recent date FRED is expected to hold a value for, as a UTC midnight Date to
+ * match how observations are stored.
+ *
+ * FRED loads the DGS series from the Fed's H.15 release, and runs one business day behind:
+ * the update on any given business day carries the PREVIOUS business day's value, not that
+ * day's. Observed directly -- FRED's own "last updated" stamp for DGS10 read
+ * 2026-09-14 3:16pm CDT, and that update is what first carried Friday 2026-09-11.
+ *
+ * So resolving this is two steps: find the latest weekday whose release has run, then step
+ * back one business day to the value that release actually delivered.
  *
  * Market holidays are deliberately not modelled -- there is no print to find on one, so a
  * holiday simply keeps the polling TTL in force until the next real print lands.
  */
 export const lastExpectedPrintDate = (now: Date = new Date()): Date => {
-  const expected = new Date(now)
+  const release = new Date(now)
 
-  if (expected.getUTCHours() < PRINT_RELEASE_HOUR_UTC) expected.setUTCDate(expected.getUTCDate() - 1)
+  if (release.getUTCHours() < PRINT_RELEASE_HOUR_UTC) release.setUTCDate(release.getUTCDate() - 1)
 
-  expected.setUTCHours(0, 0, 0, 0)
+  release.setUTCHours(0, 0, 0, 0)
 
-  // 0 is Sunday and 6 is Saturday; neither ever has a print, so walk back to Friday
-  while (expected.getUTCDay() === 0 || expected.getUTCDay() === 6) {
-    expected.setUTCDate(expected.getUTCDate() - 1)
-  }
+  while (isWeekend(release)) release.setUTCDate(release.getUTCDate() - 1)
 
-  return expected
+  return previousWeekday(release)
 }
 
 export type Freshness = 'fresh' | 'stale' | 'undecided'

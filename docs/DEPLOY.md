@@ -79,9 +79,21 @@ value FRED is expected to have published, not on elapsed time alone:
   picked up soon after FRED publishes rather than at the next full TTL. It is clamped to
   `FRED_TTL_HOURS`, which always wins when deliberately set shorter.
 
-`lastExpectedPrintDate` is the latest weekday whose H.15 release has passed. H.15 posts at
-4:15pm ET, which is 20:15 UTC under EDT and 21:15 UTC under EST, so the cutoff is 22:00 UTC —
-past both, and still the same calendar day in ET, which avoids needing a timezone database.
+`lastExpectedPrintDate` resolves what FRED should currently hold. **FRED runs one business
+day behind**: its load on any given business day carries the *previous* business day's value,
+not that day's. Verified against FRED's own "last updated" stamp — DGS10 read
+`2026-09-14 3:16pm CDT`, and that load is what first carried Friday 2026-09-11.
+
+So it resolves in two steps: find the latest weekday whose release has run, then step back
+one business day to the value that release actually delivered. The release cutoff is 22:00
+UTC, past H.15's 4:15pm ET post under both EDT (20:15 UTC) and EST (21:15 UTC), and still
+the same calendar day in ET — which avoids needing a timezone database.
+
+Getting this wrong in either direction is worth understanding. Expecting *today's* value
+means no series is ever current, so every one of them polls at the short TTL forever —
+correct data, roughly 27 series × 24 fetches a day instead of two. Expecting too little means
+a new print sits unnoticed for a full TTL.
+
 Market holidays are deliberately not modelled: there is no print to find on one, so a holiday
 leaves the polling TTL in force for the day. That costs one wasted fetch per poll interval.
 
