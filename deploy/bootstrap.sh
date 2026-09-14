@@ -150,13 +150,13 @@ systemctl enable --now nginx
 systemctl reload nginx
 
 ###############################################################################
-# Market data warmer. FRED series go stale after FRED_TTL_HOURS (default 12),
-# and the refresh runs inside whichever request arrives first — a minute-plus
-# wait for a real visitor, twice a day. Warming on a shorter interval keeps the
-# refresh off the request path.
+# Market data warmer. The refresh runs inside whichever request arrives first,
+# so warming on a shorter interval than the TTL keeps it off the request path.
 #
-# This is a mitigation, not a fix: the app refetches every series' full history
-# rather than only observations after the last stored date.
+# This also drives the app's publication-aware polling: a series behind FRED's
+# newest expected print is rechecked on FRED_POLL_TTL_HOURS (default 1), but
+# only inside a request, so this interval bounds how soon a new print is picked
+# up on a quiet day. See docs/DEPLOY.md.
 ###############################################################################
 cat > /etc/systemd/system/portfolio-api-warm.service <<'UNIT'
 [Unit]
@@ -170,7 +170,7 @@ UNIT
 
 cat > /etc/systemd/system/portfolio-api-warm.timer <<'UNIT'
 [Unit]
-Description=Warm portfolio-api market data ahead of the 12h FRED TTL
+Description=Warm portfolio-api market data ahead of the FRED TTL
 
 [Timer]
 OnBootSec=3min

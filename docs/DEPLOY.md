@@ -69,33 +69,62 @@ Manager, plus `DATABASE_URL` and `NODE_ENV` appended by `bootstrap.sh`. To chang
 
 ## Market data refresh
 
-FRED series go stale after `FRED_TTL_HOURS` (default 12) and
-[refreshStaleSeries](../src/services/fred.ts) then refetches **each series' full history**
-— about 141k observations across 24 series, roughly 59 seconds of work. It is upserts, so
-the database does not grow; measured footprint is 9.2MB on a 960MB volume.
+[refreshStaleSeries](../src/services/fred.ts) refetches a series only when it is stale, and
+staleness is publication-aware — it depends on whether the series already holds the newest
+value FRED is expected to have published, not on elapsed time alone:
 
-This is a deliberate choice: the box supports the load comfortably (two ~60s bursts a day
-against a ~144 credit/day burst balance), and refetching everything keeps revisions to
-historical values correct without incremental-sync logic.
+- `FRED_TTL_HOURS` (default 12) applies once the series holds that print. Nothing new can
+  arrive until the next release, so the series is left alone.
+- `FRED_POLL_TTL_HOURS` (default 1) applies while the series is behind it, so a new print is
+  picked up soon after FRED publishes rather than at the next full TTL. It is clamped to
+  `FRED_TTL_HOURS`, which always wins when deliberately set shorter.
 
-Two pieces of the deployment exist solely to make it invisible, and are therefore
-**load-bearing, not temporary**:
+`lastExpectedPrintDate` resolves what FRED should currently hold. **FRED runs one business
+day behind**: its load on any given business day carries the *previous* business day's value,
+not that day's. Verified against FRED's own "last updated" stamp — DGS10 read
+`2026-09-14 3:16pm CDT`, and that load is what first carried Friday 2026-09-11.
 
-- `portfolio-api-warm.timer` runs every 6 hours, comfortably inside the 12h TTL, so the
-  refresh happens off the request path. If this timer stops, one visitor per TTL window
-  absorbs the ~59s on the `marketSeries` query specifically — not an outage.
-- nginx's `proxy_read_timeout 300s`. The default 60s sits right on the refresh duration
-  and returns 504.
+So it resolves in two steps: find the latest weekday whose release has run, then step back
+one business day to the value that release actually delivered. The release cutoff is 22:00
+UTC, past H.15's 4:15pm ET post under both EDT (20:15 UTC) and EST (21:15 UTC), and still
+the same calendar day in ET — which avoids needing a timezone database.
 
-A refresh does **not** degrade the rest of the API. Measured under a forced full refresh,
-twelve concurrent `portfolioItems` requests returned 200 in 16–119ms against a ~40ms
-baseline: Prisma's query engine does the writes off the Node event loop, so readers are
-never blocked. The portfolio site, which is the only thing `kelldev.design` queries, is
-unaffected.
+Getting this wrong in either direction is worth understanding. Expecting *today's* value
+means no series is ever current, so every one of them polls at the short TTL forever —
+correct data, roughly 27 series × 24 fetches a day instead of two. Expecting too little means
+a new print sits unnoticed for a full TTL.
 
-If the history ever grows enough to make this uncomfortable, the fix is to pass
-`observation_start` to the FRED API and upsert only observations after the newest stored
-date per series.
+Market holidays are deliberately not modelled: there is no print to find on one, so a holiday
+leaves the polling TTL in force for the day. That costs one wasted fetch per poll interval.
+
+A refresh is incremental. Each request starts 30 days before the series' newest stored
+observation (`REVISION_OVERLAP_DAYS`), so it moves tens of rows per series rather than the full
+history, while still absorbing FRED's revisions to already-stored values. The newest-observation
+read that decides staleness is reused as that start anchor, and is skipped entirely for a series
+still inside its polling TTL — so publication-awareness adds no queries to a refresh and none to
+the common fresh path.
+
+Footprint is about 141k observations across 27 series, a measured 9.2MB on a 960MB volume. The
+writes are upserts, so the database does not grow.
+
+A full-history fetch — a new series, or an empty database — is still the cold-start case: about
+59 seconds of work. Two pieces of the deployment exist to keep that off a visitor's request, and
+are therefore **load-bearing, not temporary**:
+
+- `portfolio-api-warm.timer` (defined in [bootstrap.sh](../deploy/bootstrap.sh)) runs every 6 hours and
+  issues `{marketSeries{fredId}}` against localhost, which refreshes the whole registry off the
+  request path. It is also what drives polling when no real traffic arrives: the polling TTL can
+  only act inside a request, so this interval bounds how soon a new print is noticed on a quiet
+  day. Dropping it to 1h would let the default poll TTL act at full resolution; the instance's
+  `user_data` is under `ignore_changes`, so that needs a deliberate re-bootstrap.
+- nginx's `proxy_read_timeout 300s`. The default 60s sits right on the cold-start duration and
+  returns 504.
+
+A refresh does **not** degrade the rest of the API. Measured under a forced full refresh —
+now the worst case rather than the routine one — twelve concurrent `portfolioItems` requests
+returned 200 in 16-119ms against a ~40ms baseline: Prisma's query engine does the writes off the
+Node event loop, so readers are never blocked. The portfolio site, which is the only thing
+`kelldev.design` queries, is unaffected.
 
 ## Migration from the old box
 
