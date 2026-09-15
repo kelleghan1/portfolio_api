@@ -2,7 +2,20 @@
 #
 # portfolio-api release. Runs on the instance as ec2-user — invoked by
 # bootstrap.sh at first boot, and by CI over SSM for every release
-# (.github/workflows/deploy.yml). Deploying by hand is the same one command:
+# (.github/workflows/deploy.yml).
+#
+# Two modes, decided by whether BUNDLE_URL is set:
+#
+#   BUNDLE_URL set    CI already built dist/index.js on a runner and published it
+#                     as a release asset. Install runtime dependencies only, then
+#                     download the bundle. This is what every CI deploy does.
+#
+#   BUNDLE_URL unset  Build here instead: full install, then webpack. Slow on a
+#                     t4g.nano — 26 minutes when its CPU credits run dry — but it
+#                     keeps first boot and hand-deploys working with no artifact
+#                     to hand, and is the fallback if a release asset is missing.
+#
+# Deploying by hand is one command, and takes the slow path:
 #
 #   aws ssm send-command --document-name AWS-RunShellScript \
 #     --targets Key=instanceids,Values=<instance-id> \
@@ -14,6 +27,7 @@ APP_DIR=${APP_DIR:-/home/ec2-user/portfolio_api}
 DATA_DIR=${DATA_DIR:-/var/lib/portfolio-api}
 PM2_NAME=${PM2_NAME:-portfolio-api}
 REPO_BRANCH=${REPO_BRANCH:-main}
+BUNDLE_URL=${BUNDLE_URL:-}
 export PATH="/usr/local/bin:${PATH}"
 
 FIRST_BOOT=0
@@ -37,7 +51,19 @@ if [ "${FIRST_BOOT}" -eq 0 ]; then
   git reset --hard "origin/${REPO_BRANCH}"
 fi
 
-npm ci
+###############################################################################
+# Dependencies. With a prebuilt bundle the 16 devDependencies — webpack,
+# ts-loader, typescript, the codegen toolchain — are dead weight on this box,
+# and skipping them is most of what makes a CI-built deploy quick. The Prisma
+# CLI is a runtime dependency, not a dev one, so `migrate deploy` and `generate`
+# below survive --omit=dev.
+###############################################################################
+if [ -n "${BUNDLE_URL}" ]; then
+  npm ci --omit=dev
+else
+  npm ci
+fi
+
 npx prisma generate
 
 # `migrate deploy`, never `migrate dev`. The dev command is interactive and
@@ -64,7 +90,33 @@ if [ "${FIRST_BOOT}" -eq 1 ]; then
   fi
 fi
 
-npm run build
+###############################################################################
+# The bundle. Downloaded to a temporary file and moved into place only once it
+# has arrived intact, so a truncated transfer cannot leave a half-written
+# dist/index.js for pm2 to start. dist/ is gitignored, so the reset above leaves
+# the previous bundle untouched on disk and a failed download falls back to
+# building rather than to nothing.
+###############################################################################
+if [ -n "${BUNDLE_URL}" ]; then
+  echo "fetching bundle: ${BUNDLE_URL}"
+  mkdir -p dist
+  tmp_bundle=$(mktemp)
+  trap 'rm -f "${tmp_bundle}"' EXIT
+
+  if ! curl -fsSL --retry 3 --retry-delay 2 --max-time 120 -o "${tmp_bundle}" "${BUNDLE_URL}"; then
+    echo "bundle download failed; falling back to building here" >&2
+    npm ci
+    npm run build
+  elif [ ! -s "${tmp_bundle}" ]; then
+    echo "bundle downloaded empty; falling back to building here" >&2
+    npm ci
+    npm run build
+  else
+    mv "${tmp_bundle}" dist/index.js
+  fi
+else
+  npm run build
+fi
 
 if pm2 describe "${PM2_NAME}" > /dev/null 2>&1; then
   pm2 restart "${PM2_NAME}" --update-env
