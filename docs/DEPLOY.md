@@ -50,6 +50,14 @@ Two things follow from building there:
 boot, a hand-deploy, or a download that fails — and it does a full install and builds
 locally, the slow path, which is why that path still has to work.
 
+**`/usr/local/bin/portfolio-api-deploy` is a copy, not the repo file.** `bootstrap.sh`
+installs it once at first boot, and that copy is what actually runs. Editing
+`deploy/deploy.sh` therefore changes nothing on its own: the edit reaches the checkout and
+is ignored. The deploy workflow reinstalls the copy over SSM before invoking it, as root,
+having first updated the checkout — without that step a change to the release process can
+appear to ship and silently not take effect, which is exactly what happened on the first
+CI-built deploy (`db5cab4`).
+
 Before merge, [.github/workflows/ci.yml](../.github/workflows/ci.yml) runs lint and the
 production build on every pull request. It needs no AWS credentials and no database — the
 only Prisma command it runs is `prisma generate`.

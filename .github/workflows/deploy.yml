@@ -103,12 +103,35 @@ jobs:
           # Public repo, so the instance needs no credentials to fetch this.
           bundle_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/download/build-${GITHUB_SHA}/index.js"
 
+          # /usr/local/bin/portfolio-api-deploy is a COPY that bootstrap.sh took at first
+          # boot, and nothing had ever refreshed it. A change to deploy/deploy.sh reached
+          # the checkout and was then ignored, because the copy is what actually runs --
+          # which is why the first CI-built deploy silently built on the box anyway.
+          #
+          # So the checkout is updated and the copy reinstalled here, before the script is
+          # invoked. SSM runs this as root, which is what makes the install possible; the
+          # git commands drop to ec2-user because the checkout is theirs. deploy.sh fetches
+          # and resets again itself, which is idempotent and left alone so that a hand
+          # deploy still works on its own.
+          cat > /tmp/ssm-params.json <<JSON
+          {
+            "commands": [
+              "set -euo pipefail",
+              "cd /home/ec2-user/portfolio_api",
+              "sudo -u ec2-user git fetch --prune origin",
+              "sudo -u ec2-user git reset --hard origin/main",
+              "install -m 0755 deploy/deploy.sh /usr/local/bin/portfolio-api-deploy",
+              "sudo -u ec2-user -H env BUNDLE_URL='${bundle_url}' /usr/local/bin/portfolio-api-deploy"
+            ]
+          }
+          JSON
+
           command_id=$(aws ssm send-command \
             --document-name AWS-RunShellScript \
             --targets "Key=instanceids,Values=${{ vars.AWS_INSTANCE_ID }}" \
             --comment "deploy ${GITHUB_SHA::7}" \
             --timeout-seconds 900 \
-            --parameters "commands=[\"sudo -u ec2-user -H env BUNDLE_URL='${bundle_url}' /usr/local/bin/portfolio-api-deploy\"]" \
+            --parameters file:///tmp/ssm-params.json \
             --query Command.CommandId --output text)
 
           echo "SSM command: $command_id"
